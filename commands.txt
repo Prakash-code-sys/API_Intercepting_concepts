@@ -1,0 +1,251 @@
+Act as a Senior QA Automation Engineer specializing in Playwright and JavaScript.
+
+## Project Objective
+
+Create a complete Playwright JavaScript automation framework to practice API interception concepts using a demo website.
+
+### Step 1: Project Setup
+
+Use the following commands:
+
+```bash
+npm init -y
+npm init playwright@latest
+```
+
+During Playwright initialization, select:
+
+* Language: JavaScript
+* Tests folder: tests
+* GitHub Actions workflow: No
+* Install Playwright browsers: Yes
+
+Do not recreate the project if it already exists. Inspect the existing files before making changes.
+
+### Step 2: Demo Website
+
+Use the official Playwright API Mocking demo:
+
+https://demo.playwright.dev/api-mocking/
+
+The demo exposes a fruit API that can be used to practice request interception and response mocking.
+
+Use the following API route pattern where appropriate:
+
+`*/**/api/v1/fruits`
+
+Verify the demo website and API behavior before implementing the tests. Do not invent API endpoints or assume that the website supports interactions without checking.
+
+### Step 3: Create 10 Test Files
+
+Create the following JavaScript test files inside the `tests` folder:
+
+1. `01-monitor-api.spec.js`
+
+   * Monitor outgoing API requests using `page.on('request')`.
+   * Monitor incoming API responses using `page.on('response')`.
+   * Print request URLs, HTTP methods, and response status codes.
+   * Demonstrate how to observe network traffic.
+
+2. `02-mock-api.spec.js`
+
+   * Intercept the fruit API using `page.route()`.
+   * Return custom JSON using `route.fulfill()`.
+   * Add a custom fruit with a unique ID and name.
+   * Verify that the mocked fruit appears in the UI.
+
+3. `03-empty-response.spec.js`
+
+   * Mock the fruit API with an empty array.
+   * Verify the application's actual behavior when no fruits are returned.
+   * Do not assume an empty-state message exists unless the UI supports it.
+   * If necessary, verify the empty API response and document the expected UI behavior.
+
+4. `04-error-500.spec.js`
+
+   * Mock an HTTP 500 Internal Server Error response.
+   * Return a JSON error message.
+   * Verify the application's error-handling behavior.
+   * Do not assume a particular error message without checking the application.
+
+5. `05-abort-api.spec.js`
+
+   * Intercept the fruit API and abort the request using `route.abort()`.
+   * Verify the application's behavior when the API request fails.
+   * Use appropriate assertions without assuming a specific error message.
+
+6. `06-modify-request.spec.js`
+
+   * Intercept an API request.
+   * Modify its headers by adding `x-test: automation`.
+   * Continue the request using `route.continue()`.
+   * Verify that the modified request was sent where practical.
+   * If the public API cannot verify custom headers, use a controlled local test endpoint or document the limitation.
+
+7. `07-modify-response.spec.js`
+
+   * Use `route.fetch()` to obtain a real API response.
+   * Parse the JSON response.
+   * Modify the response data.
+   * Return the modified response using `route.fulfill()`.
+   * Verify that the modified data appears in the UI or in the resulting intercepted response.
+
+8. `08-wait-response.spec.js`
+
+   * Demonstrate `page.waitForResponse()`.
+   * Register the response wait before triggering the action that causes the API call.
+   * Perform the appropriate UI action.
+   * Verify the response status and URL.
+   * Do not confuse waiting for a response with API interception.
+
+9. `09-conditional-mocking.spec.js`
+
+   * Demonstrate conditional API mocking.
+   * Inspect the request URL or query parameters.
+   * Return different mock responses based on the condition.
+   * If the demo application does not support query parameters, use a controlled test endpoint or an appropriate URL-based condition.
+   * Explain the conditions in comments.
+
+10. `10-real-world-scenario.spec.js`
+
+    * Demonstrate a realistic business scenario using API interception.
+    * Use a product or fruit API to simulate a business condition.
+    * If using a product scenario, mock a product with zero stock and verify the out-of-stock UI only if a suitable application exists.
+    * Otherwise, use the fruit demo to modify a real response and verify that the custom data appears.
+    * Do not invent UI elements that the demo website does not provide.
+
+### Step 4: Technical Requirements
+
+Use:
+
+* JavaScript only
+* ES modules where appropriate
+* `@playwright/test`
+* `async/await`
+* Playwright's built-in `expect` assertions
+* Descriptive test names
+* Clean, readable code
+* Proper error handling
+* Meaningful comments explaining each concept
+
+Do not use TypeScript.
+
+Do not add unnecessary dependencies.
+
+### Step 5: Test Independence
+
+Each test must:
+
+* Run independently.
+* Register its route before navigating to the page or triggering the relevant request.
+* Avoid depending on another test.
+* Clean up any event listeners if they are added outside the normal page lifecycle.
+* Use isolated browser contexts provided by Playwright.
+* Avoid modifying shared external backend data.
+* Use deterministic assertions rather than arbitrary timeouts.
+
+If several tests use the same URL, explain how Playwright's test isolation prevents interference between tests.
+
+### Step 6: Framework Configuration
+
+Inspect and configure `playwright.config.js` appropriately.
+
+Requirements:
+
+* Use the `tests` directory.
+* Set a reasonable timeout.
+* Configure HTML reporting.
+* Use the Chromium browser project.
+* Support running a single test file.
+* Avoid unnecessary configuration changes.
+
+Use the existing configuration if it already satisfies these requirements.
+
+### Step 7: Package Scripts
+
+Update `package.json` with useful scripts without removing existing required dependencies.
+
+For example:
+
+```json
+{
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  }
+}
+```
+
+Preserve other required package configuration.
+
+### Step 8: Documentation
+
+Create a `README.md` explaining:
+
+1. What API interception is.
+2. The purpose of each of the 10 test files.
+3. The difference between:
+
+   * `page.on('request')`
+   * `page.on('response')`
+   * `page.route()`
+   * `route.continue()`
+   * `route.fulfill()`
+   * `route.abort()`
+   * `route.fetch()`
+   * `page.waitForResponse()`
+4. How to install dependencies.
+5. How to run all tests.
+6. How to run an individual test.
+7. How to view the HTML report.
+8. Common errors and troubleshooting steps.
+
+### Step 9: Expected Project Structure
+
+```text
+playwright-api-interception/
+├── tests/
+│   ├── 01-monitor-api.spec.js
+│   ├── 02-mock-api.spec.js
+│   ├── 03-empty-response.spec.js
+│   ├── 04-error-500.spec.js
+│   ├── 05-abort-api.spec.js
+│   ├── 06-modify-request.spec.js
+│   ├── 07-modify-response.spec.js
+│   ├── 08-wait-response.spec.js
+│   ├── 09-conditional-mocking.spec.js
+│   └── 10-real-world-scenario.spec.js
+├── playwright.config.js
+├── package.json
+├── package-lock.json
+└── README.md
+```
+
+The existing `node_modules` and other generated Playwright files should remain intact.
+
+### Step 10: Validation
+
+After creating the files:
+
+1. Verify that all 10 test files exist.
+2. Check JavaScript syntax and imports.
+3. Run the complete test suite.
+4. Fix any failing tests caused by incorrect selectors, route patterns, or assertions.
+5. Do not claim the tests pass unless they have actually been executed successfully.
+6. Clearly identify any tests that require network access or a specific demo-site behavior.
+7. Summarize the files created and provide the exact commands to execute them.
+
+## Final Deliverables
+
+Provide:
+
+* All 10 working test files.
+* Updated Playwright configuration.
+* Updated package scripts.
+* README documentation.
+* A summary of the concepts demonstrated by each test.
+* Commands to run all tests and individual tests.
+
+Prioritize beginner-friendly JavaScript code that I can understand and explain during a Playwright Automation Engineer interview.
